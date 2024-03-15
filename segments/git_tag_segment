@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# git_tag_segment
+
+# Set default symbols if not already defined in config
+# Defaults should be standard symbols.
+[[ -z ${PL_SYMBOLS[git_tag]} ]] && PL_SYMBOLS[git_tag]='🏷️'
+
+function git_tag_segment {
+    local git_tag
+    git_tag=$(git describe --tags --abbrev=0 2>/dev/null)
+
+    [[ -z $git_tag ]] && return ## returnearly if not a git tag
+
+    local bg_color="$1"
+    local fg_color="$2"
+    local content=" ${PL_SYMBOLS[git_tag]} ${git_tag}"
+
+    PS1+="$(segment_end "$fg_color" "$bg_color")"
+    PS1+="$(segment_content "$fg_color" "$bg_color" "$content ")"
+    __last_color="$bg_color"
+}
